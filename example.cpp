@@ -519,8 +519,8 @@ int main() {
   resultData = data + dataOffset;
   for (uint32_t index = 0; index < elements; index++) {
     if (resultData[index] != aData[index] + bData[index]) {
-      fprintf(stderr, "result[%u] is '%d' not '0'!\n", index,
-              resultData[index]);
+      fprintf(stderr, "result[%u] is '%d' not '%d'!\n", index,
+              resultData[index], aData[index] + bData[index]);
     }
   }
   // and unmap before freeing the memory
