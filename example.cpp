@@ -8,7 +8,7 @@
 #include <vector>
 
 #ifdef ENABLE_LAYERS
-// print out a debug repot to stderr
+// print out a debug report to stderr
 VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(
     VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType,
     uint64_t object, size_t location, int32_t messageCode,
