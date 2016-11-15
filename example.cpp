@@ -217,7 +217,7 @@ int main() {
   VkComputePipelineCreateInfo pipelineCreateInfo = {};
   pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
   pipelineCreateInfo.stage.sType =
-      VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+      VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
   pipelineCreateInfo.stage.stage = VK_SHADER_STAGE_COMPUTE_BIT;
   pipelineCreateInfo.stage.module = shaderModule;
   // name of the shader stage entry point for GLSL shaders is always "main"
@@ -541,6 +541,8 @@ int main() {
   vkDestroyDebugReportCallbackEXT(instance, callback, nullptr);
 #endif
   vkDestroyInstance(instance, nullptr);
+
+  printf("success\n");
 
   return 0;
 }
