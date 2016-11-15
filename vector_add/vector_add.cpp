@@ -218,7 +218,7 @@ int main() {
   // load vector_add.spv from file so we can create a pipeline
   VkShaderModuleCreateInfo shaderModuleCreateInfo = {};
   shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-  auto shaderCode = loadShaderCode("vector_add.spv");
+  auto shaderCode = loadShaderCode(SHADER_PATH "vector_add.spv");
   shaderModuleCreateInfo.pCode =
       reinterpret_cast<uint32_t *>(shaderCode.data());
   shaderModuleCreateInfo.codeSize = shaderCode.size();
