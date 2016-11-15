@@ -47,7 +47,7 @@ int main() {
   // using version 1.0.0 is required so your app will work with any loader
   applicationInfo.apiVersion = VK_MAKE_VERSION(1, 0, 0);
 
-  //
+  // create the instance we will be using
   VkInstanceCreateInfo instanceCreateInfo = {};
   instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   instanceCreateInfo.pApplicationInfo = &applicationInfo;
@@ -399,7 +399,7 @@ int main() {
   bufferBInfo.buffer = bufferB;
   bufferBInfo.offset = 0;
   bufferBInfo.range = VK_WHOLE_SIZE;
-  // update the bind point
+  // but we can reuse the write descriptor set structure
   writeDescriptorSet.dstBinding = 1;
   writeDescriptorSet.pBufferInfo = &bufferBInfo;
   descriptorSetWrites.push_back(writeDescriptorSet);
@@ -408,7 +408,7 @@ int main() {
   bufferResultInfo.buffer = bufferResult;
   bufferResultInfo.offset = 0;
   bufferResultInfo.range = VK_WHOLE_SIZE;
-  // for each buffer
+  // just changing the binding and buffer info pointer for each buffer
   writeDescriptorSet.dstBinding = 2;
   writeDescriptorSet.pBufferInfo = &bufferResultInfo;
   descriptorSetWrites.push_back(writeDescriptorSet);
@@ -435,7 +435,7 @@ int main() {
       VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   commandBufferAllocateInfo.commandPool = commandPool;
   // we will use a primary command buffer in our example, secondary command
-  // buffers are a powerful feature but we don't that power for this example
+  // buffers are a powerful feature but we don't need that power here
   commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   commandBufferAllocateInfo.commandBufferCount = 1;
   VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
