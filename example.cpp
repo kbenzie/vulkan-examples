@@ -31,6 +31,19 @@ std::vector<char> loadShaderCode(const char *filename) {
   return shaderCode;
 }
 
+// search for compatible memory properties and return the memory type index
+int32_t findMemoryTypeFromProperties(
+    uint32_t memoryTypeBits, VkPhysicalDeviceMemoryProperties properties,
+    VkMemoryPropertyFlags requiredProperties) {
+  for (int32_t index = 0; index < properties.memoryTypeCount; ++index) {
+    if (memoryTypeBits & (1 << index) &&
+        (properties.memoryTypes[index].propertyFlags == requiredProperties)) {
+      return index;
+    }
+  }
+  return -1;
+}
+
 int main() {
   // tell the driver about your app
   VkApplicationInfo applicationInfo = {};
@@ -280,28 +293,15 @@ int main() {
   // we need to find out about the physical devices memory properties
   VkPhysicalDeviceMemoryProperties memoryProperties;
   vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
-  // ensure we find a usable memory type by setting the index to uint32_t max
-  uint32_t memoryTypeIndex = 0xFFFFFFFF;
-  for (uint32_t index = 0; index < memoryProperties.memoryTypeCount; index++) {
-    // depending on the implementation there may be multiple different types of
-    // memory, for simplicity we are asking for host coherent memory which
-    // avoids us having to perform manual cache flushing also in order to map
-    // memory to the host it must be host visible
-    if ((VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT &
-         memoryProperties.memoryTypes[index].propertyFlags) &&
-        (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT &
-         memoryProperties.memoryTypes[index].propertyFlags) &&
-        (requiredMemorySize <
-         memoryProperties
-             .memoryHeaps[memoryProperties.memoryTypes[index].heapIndex]
-             .size)) {
-      memoryTypeIndex = index;
-      break;
-    }
-  }
-  if (0xFFFFFFFF == memoryTypeIndex) {
-    // we didn't find a suitable memory type
-    return 42;
+  // find a compatible memory type which provides host access to the memory,
+  // also ensure the memory is coherent so we don't have to manually flush the
+  // cache to access data
+  auto memoryTypeIndex = findMemoryTypeFromProperties(
+      bufferAMemoryRequirements.memoryTypeBits, memoryProperties,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+          VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+  if (0 > memoryTypeIndex) {
+    return ~42;  // returns -43
   }
 
   // now we know how much memory we need we can allocate it all at once, it is
