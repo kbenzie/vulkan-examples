@@ -19,6 +19,15 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 ```
 
+### Options
+
+Validation layers are disabled by default, to enable validation you can specify
+the following during CMake configuration.
+
+```
+cmake -DENABLE_LAYERS=ON ..
+```
+
 ## License (Unlicense)
 
 See [license](LICENSE.md) file.
