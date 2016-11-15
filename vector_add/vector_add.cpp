@@ -1,10 +1,6 @@
 #include <vulkan/vulkan.h>
 
-#include <cassert>
 #include <cstdio>
-#include <cstring>
-#include <fstream>
-#include <utility>
 #include <vector>
 
 #ifdef ENABLE_LAYERS
