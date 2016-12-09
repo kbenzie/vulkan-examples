@@ -5,6 +5,7 @@ Examples of using the Khronos Group's Vulkan standard.
 ## Examples
 
 *   `vector_add` - a vector addition compute example
+*   `triangle` - draw a triangle example
 
 ## Building
 
