@@ -1,5 +1,6 @@
 #include <vulkan/vulkan.h>
 
+#include <cassert>
 #include <cstdio>
 #include <vector>
 
@@ -31,10 +32,13 @@ std::vector<char> loadShaderCode(const char *filename) {
 int32_t findMemoryTypeFromProperties(
     uint32_t memoryTypeBits, VkPhysicalDeviceMemoryProperties properties,
     VkMemoryPropertyFlags requiredProperties) {
-  for (int32_t index = 0; index < properties.memoryTypeCount; ++index) {
-    if (memoryTypeBits & (1 << index) &&
-        (properties.memoryTypes[index].propertyFlags == requiredProperties)) {
-      return index;
+  assert(properties.memoryTypeCount < 32u);
+  for (uint32_t index = 0; index < properties.memoryTypeCount; ++index) {
+    if (memoryTypeBits & (1u << index) &&
+        // Find the first memory type that supports all the required flags.
+        ((properties.memoryTypes[index].propertyFlags & requiredProperties) ==
+         requiredProperties)) {
+      return (int32_t)index;
     }
   }
   return -1;
@@ -482,7 +486,7 @@ int main() {
   dataOffset += elements;
   int32_t *resultData = data + elements;
   // now we can write our data into the memory for each input buffer
-  for (int32_t index = 0; index < elements; index++) {
+  for (uint32_t index = 0; index < elements; index++) {
     aData[index] = index;
     bData[index] = -index;
     // to ensure we are actually calculating a result we will set the result
